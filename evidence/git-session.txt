@@ -1,0 +1,385 @@
+
+[Software-Engineering-lab5A] $ git remote -v
+origin	https://github.com/Josephsaku/Software-Engineering-lab5.git (fetch)
+origin	https://github.com/Josephsaku/Software-Engineering-lab5.git (push)
+[exit 0]
+
+[Software-Engineering-lab5A] $ git add .gitignore LICENSE Makefile README.md UPSTREAM_README.md benchmark.c example.c example2.c example3.c minctest.h repl.c smoke.c tinyexpr.c tinyexpr.h
+[exit 0]
+
+[Software-Engineering-lab5A] $ git commit -m 'chore: import TinyExpr C project with original license'
+[main (root-commit) 598e0d3] chore: import TinyExpr C project with original license
+ 14 files changed, 2720 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 LICENSE
+ create mode 100644 Makefile
+ create mode 100644 README.md
+ create mode 100644 UPSTREAM_README.md
+ create mode 100644 benchmark.c
+ create mode 100644 example.c
+ create mode 100644 example2.c
+ create mode 100644 example3.c
+ create mode 100644 minctest.h
+ create mode 100644 repl.c
+ create mode 100644 smoke.c
+ create mode 100644 tinyexpr.c
+ create mode 100644 tinyexpr.h
+[exit 0]
+
+[Software-Engineering-lab5A] $ git switch -c feature/cli-expression
+Switched to a new branch 'feature/cli-expression'
+[exit 0]
+
+[Software-Engineering-lab5A] $ make example
+gcc -c -Wall -Wshadow -O2 example.c -o example.o
+gcc -Wall -Wshadow -O2 -o example example.o tinyexpr.o -lm
+[exit 0]
+
+[Software-Engineering-lab5A] $ ./example '2+3*4'
+Result: 14.000000
+[exit 0]
+
+[Software-Engineering-lab5A] $ ./example 2+
+Parse error at position 2
+[exit 1]
+
+[Software-Engineering-lab5A] $ ./example 1 2
+Usage: ./example [expression]
+[exit 2]
+
+[Software-Engineering-lab5A] $ git add example.c
+[exit 0]
+
+[Software-Engineering-lab5A] $ git commit -m 'feat: accept command-line expressions and report syntax errors'
+[feature/cli-expression acc073a] feat: accept command-line expressions and report syntax errors
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+[exit 0]
+
+[Software-Engineering-lab5A] $ git diff main..feature/cli-expression -- example.c
+diff --git a/example.c b/example.c
+index 040093f..0b90b66 100644
+--- a/example.c
++++ b/example.c
+@@ -1,10 +1,20 @@
++/* Modified for Software Engineering Lab 5: command-line input and errors. */
+ #include "tinyexpr.h"
+ #include <stdio.h>
+ 
+ int main(int argc, char *argv[])
+ {
+-    const char *c = "sqrt(5^2+7^2+11^2+(8-2)^2)";
+-    double r = te_interp(c, 0);
+-    printf("The expression:\n\t%s\nevaluates to:\n\t%f\n", c, r);
++    if (argc > 2) {
++        fprintf(stderr, "Usage: %s [expression]\n", argv[0]);
++        return 2;
++    }
++    const char *c = argc == 2 ? argv[1] : "sqrt(5^2+7^2+11^2+(8-2)^2)";
++    int error = 0;
++    double r = te_interp(c, &error);
++    if (error) {
++        fprintf(stderr, "Parse error at position %d\n", error);
++        return 1;
++    }
++    printf("Result: %f\n", r);
+     return 0;
+ }
+[exit 0]
+
+[Software-Engineering-lab5A] $ git switch main
+Switched to branch 'main'
+Your branch is based on 'origin/main', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+[exit 0]
+
+[Software-Engineering-lab5A] $ git merge --no-ff feature/cli-expression -m 'merge: integrate command-line calculator feature'
+Merge made by the 'ort' strategy.
+ example.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+[exit 0]
+
+[Software-Engineering-lab5A] $ git push -u origin main
+To https://github.com/Josephsaku/Software-Engineering-lab5.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+[exit 0]
+
+[Software-Engineering-lab5A] $ git push -u origin feature/cli-expression
+remote: 
+remote: Create a pull request for 'feature/cli-expression' on GitHub by visiting:        
+remote:      https://github.com/Josephsaku/Software-Engineering-lab5/pull/new/feature/cli-expression        
+remote: 
+To https://github.com/Josephsaku/Software-Engineering-lab5.git
+ * [new branch]      feature/cli-expression -> feature/cli-expression
+branch 'feature/cli-expression' set up to track 'origin/feature/cli-expression'.
+[exit 0]
+
+[Developer] $ git clone https://github.com/Josephsaku/Software-Engineering-lab5.git /Users/alaia/Developer/Software-Engineering-lab5B
+Cloning into '/Users/alaia/Developer/Software-Engineering-lab5B'...
+[exit 0]
+
+[Software-Engineering-lab5B] $ git remote -v
+origin	https://github.com/Josephsaku/Software-Engineering-lab5.git (fetch)
+origin	https://github.com/Josephsaku/Software-Engineering-lab5.git (push)
+[exit 0]
+
+[Software-Engineering-lab5A] $ git add example.c
+[exit 0]
+
+[Software-Engineering-lab5A] $ git commit -m 'feat(A): include the expression in calculator output'
+[main 8c5650a] feat(A): include the expression in calculator output
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+[Software-Engineering-lab5A] $ git push origin main
+To https://github.com/Josephsaku/Software-Engineering-lab5.git
+   5dffea0..8c5650a  main -> main
+[exit 0]
+
+[Software-Engineering-lab5B] $ git add example.c
+[exit 0]
+
+[Software-Engineering-lab5B] $ git commit -m 'feat(B simulation): format calculator result to two decimals'
+[main 54c2183] feat(B simulation): format calculator result to two decimals
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+[Software-Engineering-lab5B] $ git push origin main
+To https://github.com/Josephsaku/Software-Engineering-lab5.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/Josephsaku/Software-Engineering-lab5.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[exit 1]
+
+[Software-Engineering-lab5B] $ git pull --no-rebase origin main
+From https://github.com/Josephsaku/Software-Engineering-lab5
+ * branch            main       -> FETCH_HEAD
+   5dffea0..8c5650a  main       -> origin/main
+Auto-merging example.c
+CONFLICT (content): Merge conflict in example.c
+Automatic merge failed; fix conflicts and then commit the result.
+[exit 1]
+
+[Software-Engineering-lab5B] $ git status --short
+UU example.c
+[exit 0]
+
+[Software-Engineering-lab5B] $ git diff -- example.c
+diff --cc example.c
+index c6fdc88,fdf17ac..0000000
+--- a/example.c
++++ b/example.c
+@@@ -15,6 -15,6 +15,10 @@@ int main(int argc, char *argv[]
+          fprintf(stderr, "Parse error at position %d\n", error);
+          return 1;
+      }
+++<<<<<<< HEAD
+ +    printf("Result: %.2f\n", r);
+++=======
++     printf("Expression: %s\nResult: %f\n", c, r);
+++>>>>>>> 8c5650a63b579b9f1ec7ffedc8f9ff351d7a5de0
+      return 0;
+  }
+[exit 0]
+
+[Software-Engineering-lab5B] $ make example
+gcc -c -Wall -Wshadow -O2 example.c -o example.o
+gcc -c -Wall -Wshadow -O2 tinyexpr.c -o tinyexpr.o
+gcc -Wall -Wshadow -O2 -o example example.o tinyexpr.o -lm
+[exit 0]
+
+[Software-Engineering-lab5B] $ ./example 10/4
+Expression: 10/4
+Result: 2.50
+[exit 0]
+
+[Software-Engineering-lab5B] $ git add example.c
+[exit 0]
+
+[Software-Engineering-lab5B] $ git commit -m 'merge: resolve A/B output conflict preserving expression and precision'
+[main ed76ee7] merge: resolve A/B output conflict preserving expression and precision
+[exit 0]
+
+[Software-Engineering-lab5B] $ git push origin main
+To https://github.com/Josephsaku/Software-Engineering-lab5.git
+   8c5650a..ed76ee7  main -> main
+[exit 0]
+
+[Software-Engineering-lab5A] $ git pull --ff-only origin main
+From https://github.com/Josephsaku/Software-Engineering-lab5
+ * branch            main       -> FETCH_HEAD
+   8c5650a..ed76ee7  main       -> origin/main
+Updating 8c5650a..ed76ee7
+Fast-forward
+ example.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+[Software-Engineering-lab5A] $ make clean
+rm -f *.o *.exe example example2 example3 bench repl repl-readline smoke_pr smoke
+[exit 0]
+
+[Software-Engineering-lab5A] $ make
+gcc -Wall -Wshadow -O2 -o smoke smoke.c tinyexpr.c -lm
+./smoke
+	Results       pass:158   fail: 0      0ms
+	Syntax        pass:65   fail: 0      0ms
+	NaNs          pass:55   fail: 0      0ms
+	INFs          pass:55   fail: 0      0ms
+	Variables     pass:40   fail: 0      0ms
+	Functions     pass:4406   fail: 0      0ms
+	Dynamic       pass:44   fail: 0      0ms
+	Closure       pass:17   fail: 0      0ms
+	Optimize      pass:12   fail: 0      0ms
+	Pow           pass:51   fail: 0      0ms
+	Combinatorics pass:52   fail: 0      0ms
+	Logic         pass:130   fail: 0      0ms
+	Depth         pass: 8   fail: 0      0ms
+	Number        pass:5025   fail: 0      1ms
+	Locale        pass: 7   fail: 0      0ms
+ALL TESTS PASSED (10125/10125)
+gcc -Wall -Wshadow -O2 -DTE_POW_FROM_RIGHT -DTE_NAT_LOG -o smoke_pr smoke.c tinyexpr.c -lm
+./smoke_pr
+	Results       pass:162   fail: 0      0ms
+	Syntax        pass:65   fail: 0      0ms
+	NaNs          pass:55   fail: 0      0ms
+	INFs          pass:55   fail: 0      0ms
+	Variables     pass:40   fail: 0      0ms
+	Functions     pass:4406   fail: 0      1ms
+	Dynamic       pass:44   fail: 0      0ms
+	Closure       pass:17   fail: 0      0ms
+	Optimize      pass:12   fail: 0      0ms
+	Pow           pass:57   fail: 0      0ms
+	Combinatorics pass:52   fail: 0      0ms
+	Logic         pass:130   fail: 0      0ms
+	Depth         pass: 8   fail: 0      0ms
+	Number        pass:5025   fail: 0      0ms
+	Locale        pass: 7   fail: 0      0ms
+ALL TESTS PASSED (10135/10135)
+gcc -c -Wall -Wshadow -O2 repl.c -o repl.o
+gcc -c -Wall -Wshadow -O2 tinyexpr.c -o tinyexpr.o
+gcc -Wall -Wshadow -O2 -o repl repl.o tinyexpr.o -lm
+gcc -c -Wall -Wshadow -O2 benchmark.c -o benchmark.o
+gcc -Wall -Wshadow -O2 -o bench benchmark.o tinyexpr.o -lm
+gcc -c -Wall -Wshadow -O2 example.c -o example.o
+gcc -Wall -Wshadow -O2 -o example example.o tinyexpr.o -lm
+gcc -c -Wall -Wshadow -O2 example2.c -o example2.o
+gcc -Wall -Wshadow -O2 -o example2 example2.o tinyexpr.o -lm
+gcc -c -Wall -Wshadow -O2 example3.c -o example3.o
+gcc -Wall -Wshadow -O2 -o example3 example3.o tinyexpr.o -lm
+[exit 0]
+
+[Software-Engineering-lab5A] $ ./example
+Expression: sqrt(5^2+7^2+11^2+(8-2)^2)
+Result: 15.20
+[exit 0]
+
+[Software-Engineering-lab5A] $ ./example '2+3*4'
+Expression: 2+3*4
+Result: 14.00
+[exit 0]
+
+[Software-Engineering-lab5A] $ ./example 'sqrt(81)+2^3'
+Expression: sqrt(81)+2^3
+Result: 17.00
+[exit 0]
+
+[Software-Engineering-lab5A] $ ./example 10/4
+Expression: 10/4
+Result: 2.50
+[exit 0]
+
+[Software-Engineering-lab5A] $ ./example 2+
+Parse error at position 2
+[exit 1]
+
+[Software-Engineering-lab5A] $ ./example 1 2
+Usage: ./example [expression]
+[exit 2]
+
+[Software-Engineering-lab5A] $ git tag -a v1.0.0 -m 'Lab 5: merged calculator with resolved collaboration conflict'
+[exit 0]
+
+[Software-Engineering-lab5A] $ git tag lab5-delete-demo
+[exit 0]
+
+[Software-Engineering-lab5A] $ git tag -n
+lab5-delete-demo merge: resolve A/B output conflict preserving expression and precision
+v1.0.0          Lab 5: merged calculator with resolved collaboration conflict
+[exit 0]
+
+[Software-Engineering-lab5A] $ git show --no-patch v1.0.0
+tag v1.0.0
+Tagger: Josephsaku <Josephsakureal@gmail.com>
+Date:   Thu Nov 12 16:15:12 2026 +0800
+
+Lab 5: merged calculator with resolved collaboration conflict
+
+commit ed76ee7ccdd7c8ec1113a3b51da33f0c36a9d8d0
+Merge: 54c2183 8c5650a
+Author: Josephsaku <Josephsakureal@gmail.com>
+Date:   Thu Nov 12 16:15:06 2026 +0800
+
+    merge: resolve A/B output conflict preserving expression and precision
+[exit 0]
+
+[Software-Engineering-lab5A] $ git push origin v1.0.0 lab5-delete-demo
+To https://github.com/Josephsaku/Software-Engineering-lab5.git
+ * [new tag]         v1.0.0 -> v1.0.0
+ * [new tag]         lab5-delete-demo -> lab5-delete-demo
+[exit 0]
+
+[Software-Engineering-lab5A] $ git ls-remote --tags origin
+ed76ee7ccdd7c8ec1113a3b51da33f0c36a9d8d0	refs/tags/lab5-delete-demo
+66e154cbe29043e2cc3720c3eb3acc67839de9bd	refs/tags/v1.0.0
+ed76ee7ccdd7c8ec1113a3b51da33f0c36a9d8d0	refs/tags/v1.0.0^{}
+[exit 0]
+
+[Software-Engineering-lab5A] $ git tag -d lab5-delete-demo
+Deleted tag 'lab5-delete-demo' (was ed76ee7)
+[exit 0]
+
+[Software-Engineering-lab5A] $ git push origin :refs/tags/lab5-delete-demo
+To https://github.com/Josephsaku/Software-Engineering-lab5.git
+ - [deleted]         lab5-delete-demo
+[exit 0]
+
+[Software-Engineering-lab5A] $ git tag -n
+v1.0.0          Lab 5: merged calculator with resolved collaboration conflict
+[exit 0]
+
+[Software-Engineering-lab5A] $ git ls-remote --tags origin
+66e154cbe29043e2cc3720c3eb3acc67839de9bd	refs/tags/v1.0.0
+ed76ee7ccdd7c8ec1113a3b51da33f0c36a9d8d0	refs/tags/v1.0.0^{}
+[exit 0]
+
+[Software-Engineering-lab5B] $ git fetch --tags
+From https://github.com/Josephsaku/Software-Engineering-lab5
+ * [new tag]         v1.0.0     -> v1.0.0
+[exit 0]
+
+[Software-Engineering-lab5A] $ git log --graph --oneline --decorate --all
+*   ed76ee7 (HEAD -> main, tag: v1.0.0, origin/main) merge: resolve A/B output conflict preserving expression and precision
+|\  
+| * 8c5650a feat(A): include the expression in calculator output
+* | 54c2183 feat(B simulation): format calculator result to two decimals
+|/  
+*   5dffea0 merge: integrate command-line calculator feature
+|\  
+| * acc073a (origin/feature/cli-expression, feature/cli-expression) feat: accept command-line expressions and report syntax errors
+|/  
+* 598e0d3 chore: import TinyExpr C project with original license
+[exit 0]
+
+[Software-Engineering-lab5A] $ git status --short --branch
+## main...origin/main
+?? evidence/
+[exit 0]
+
+[Software-Engineering-lab5B] $ git status --short --branch
+## main...origin/main
+[exit 0]

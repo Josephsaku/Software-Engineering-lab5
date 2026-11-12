@@ -16,3 +16,11 @@ make
 ```
 
 实验操作及实际命令输出保存在 evidence/ 中。报告沿用所提供的 Word 模板。
+
+## 实验交付
+
+- [实验报告](<实验5 Git分支及标签管理 实验报告.docx>)：保留原模板标题、字体和表格，个人信息留空，包含 20 张操作配图。
+- [操作截图打包](evidence/操作截图.zip)：纯终端样式的命令记录截图；各张图片见 evidence/screenshots/。
+- [完整执行记录](evidence/git-session.txt)与[冲突内容](evidence/conflict.diff)。
+- 功能分支：feature/cli-expression；正式标签：v1.0.0。
+- lab5-delete-demo 已在本地和远程创建、查看并删除，记录保留在执行日志中。

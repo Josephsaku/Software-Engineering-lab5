@@ -1,0 +1,15 @@
+diff --cc example.c
+index c6fdc88,fdf17ac..0000000
+--- a/example.c
++++ b/example.c
+@@@ -15,6 -15,6 +15,10 @@@ int main(int argc, char *argv[]
+          fprintf(stderr, "Parse error at position %d\n", error);
+          return 1;
+      }
+++<<<<<<< HEAD
+ +    printf("Result: %.2f\n", r);
+++=======
++     printf("Expression: %s\nResult: %f\n", c, r);
+++>>>>>>> 8c5650a63b579b9f1ec7ffedc8f9ff351d7a5de0
+      return 0;
+  }
