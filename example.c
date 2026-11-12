@@ -1,10 +1,20 @@
+/* Modified for Software Engineering Lab 5: command-line input and errors. */
 #include "tinyexpr.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])
 {
-    const char *c = "sqrt(5^2+7^2+11^2+(8-2)^2)";
-    double r = te_interp(c, 0);
-    printf("The expression:\n\t%s\nevaluates to:\n\t%f\n", c, r);
+    if (argc > 2) {
+        fprintf(stderr, "Usage: %s [expression]\n", argv[0]);
+        return 2;
+    }
+    const char *c = argc == 2 ? argv[1] : "sqrt(5^2+7^2+11^2+(8-2)^2)";
+    int error = 0;
+    double r = te_interp(c, &error);
+    if (error) {
+        fprintf(stderr, "Parse error at position %d\n", error);
+        return 1;
+    }
+    printf("Result: %f\n", r);
     return 0;
 }
