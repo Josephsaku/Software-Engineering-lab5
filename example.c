@@ -15,6 +15,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Parse error at position %d\n", error);
         return 1;
     }
-    printf("Result: %f\n", r);
+    printf("Expression: %s\nResult: %f\n", c, r);
     return 0;
 }
